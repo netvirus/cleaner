@@ -21,28 +21,21 @@ file_extension = ".tkc"
 
 files_list = {}
 
-f = open('files.txt', 'r')
-content_list = f.readlines()
+with open('files.txt') as f:
+    content_list = f.read().splitlines()
 
 for root, dirs, files in os.walk(path_to_look_for):
-    for file in files:
-        if file.endswith(file_extension):
-            files_list[file] = os.path.join(root, file)
-if log_enabled:
-    logging.info("Found " + str(len(files_list)) + " files")
+    files_list_txt = list(filter(lambda x: x.endswith(file_extension), files))
+    files_list.update(dict(zip(map(lambda x: os.path.join(root, x), files_list_txt), files_list_txt,)))
+    if log_enabled:
+        logging.info("Found " + str(len(files_list)) + " files")
 
 if len(files_list) != 0:
-    for c in content_list:
-        file_name = c.rstrip('\n')
-        if files_list.get(file_name) is not None:
-            file_name_with_full_path = files_list.get(file_name)
-            try:
-                os.remove(file_name_with_full_path)
-                if log_enabled:
-                    logging.info("Remove file: " + file_name_with_full_path)
-            except:
-                if log_enabled:
-                    logging.info("Error while deleting file " + file_name_with_full_path)
+    for keys, values in files_list.items():
+        if values in content_list:
+            os.remove(keys)
+            if log_enabled:
+                logging.info("Remove file: " + keys)
 else:
     if log_enabled:
         logging.info("There is nothing to remove!")
