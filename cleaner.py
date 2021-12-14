@@ -1,4 +1,4 @@
-# Cleaner v 1.0
+# Cleaner v 2.0
 # Author netvirus
 # https://github.com/yaroslav-tsuprak
 
@@ -28,8 +28,8 @@ for root, dirs, files in os.walk(path_to_look_for):
     for file in files:
         if file.endswith(file_extension):
             files_list[file] = os.path.join(root, file)
-            if log_enabled:
-                logging.info("Found " + len(files_list) + " files")
+if log_enabled:
+    logging.info("Found " + str(len(files_list)) + " files")
 
 if len(files_list) != 0:
     for c in content_list:
