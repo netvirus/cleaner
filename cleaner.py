@@ -29,16 +29,20 @@ for root, dirs, files in os.walk(path_to_look_for):
         if file.endswith(file_extension):
             files_list[file] = os.path.join(root, file)
             if log_enabled:
-                logging.info("Found file: " + os.path.join(root, file))
+                logging.info("Found " + len(files_list) + " files")
 
 if len(files_list) != 0:
     for c in content_list:
         file_name = c.rstrip('\n')
         if files_list.get(file_name) is not None:
             file_name_with_full_path = files_list.get(file_name)
-            os.remove(file_name_with_full_path)
-            if log_enabled:
-                logging.info("Remove file: " + file_name_with_full_path)
+            try:
+                os.remove(file_name_with_full_path)
+                if log_enabled:
+                    logging.info("Remove file: " + file_name_with_full_path)
+            except:
+                if log_enabled:
+                    logging.info("Error while deleting file " + file_name_with_full_path)
 else:
     if log_enabled:
         logging.info("There is nothing to remove!")
